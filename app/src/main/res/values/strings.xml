@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">wordMemoryApp</string>
+
+    <!-- 导航与页面标题 -->
+    <string name="nav_word_list">单词</string>
+    <string name="nav_review">复习</string>
+    <string name="nav_settings">设置</string>
+    <string name="title_word_list">单词列表</string>
+    <string name="title_word_detail">单词详情</string>
+    <string name="title_review">复习测试</string>
+    <string name="title_settings">设置</string>
+
+    <!-- 页面内容 -->
+    <string name="word_list_placeholder">列表 UI 待实现\n当前页面用于验证 Navigation 骨架</string>
+    <string name="btn_open_detail">查看单词详情</string>
+    <string name="word_detail_placeholder">详情 UI 待实现，这里展示从列表页传过来的参数：</string>
+    <string name="btn_back_to_list">返回列表</string>
+    <string name="review_placeholder">复习测试页\n（UI 待实现，后续接入艾宾浩斯复习计划）</string>
+    <string name="settings_db_section">Room 数据库调试</string>
+    <string name="settings_api_section">DeepSeek API 调试</string>
+    <string name="btn_test_connection">测试连接</string>
+    <string name="btn_test_db">测试数据库</string>
+    <string name="test_result_default">点击下方【测试连接】测试 DeepSeek API</string>
+    <string name="db_result_default">点击下方【测试数据库】验证实体与 DAO</string>
 </resources>

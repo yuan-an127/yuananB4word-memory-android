@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/wordListFragment">
+
+    <!-- 单词列表页：底部导航的首页 -->
+    <fragment
+        android:id="@+id/wordListFragment"
+        android:name="com.zsy.wordmemoryapp.WordListFragment"
+        android:label="@string/title_word_list"
+        tools:layout="@layout/fragment_word_list">
+        <!-- 列表 -> 详情 -->
+        <action
+            android:id="@+id/action_wordList_to_wordDetail"
+            app:destination="@id/wordDetailFragment" />
+    </fragment>
+
+    <!-- 单词详情页：接收列表页传过来的 word 参数 -->
+    <fragment
+        android:id="@+id/wordDetailFragment"
+        android:name="com.zsy.wordmemoryapp.WordDetailFragment"
+        android:label="@string/title_word_detail"
+        tools:layout="@layout/fragment_word_detail">
+        <argument
+            android:name="word"
+            android:defaultValue="abandon"
+            app:argType="string" />
+    </fragment>
+
+    <!-- 复习测试页 -->
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.zsy.wordmemoryapp.ReviewFragment"
+        android:label="@string/title_review"
+        tools:layout="@layout/fragment_review" />
+
+    <!-- 设置页（保留 DeepSeek / Room 调试入口） -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.zsy.wordmemoryapp.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
+
+</navigation>

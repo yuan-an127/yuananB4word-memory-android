@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- item 的 id 与 nav_graph 中的目的地 id 保持一致，NavigationUI 才能自动联动 -->
+    <item
+        android:id="@+id/wordListFragment"
+        android:icon="@drawable/ic_menu_list"
+        android:title="@string/nav_word_list" />
+
+    <item
+        android:id="@+id/reviewFragment"
+        android:icon="@drawable/ic_menu_review"
+        android:title="@string/nav_review" />
+
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_menu_settings"
+        android:title="@string/nav_settings" />
+
+</menu>
