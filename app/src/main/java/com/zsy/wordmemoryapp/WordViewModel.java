@@ -1,6 +1,8 @@
 package com.zsy.wordmemoryapp;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -17,14 +19,32 @@ import java.util.List;
  */
 public class WordViewModel extends AndroidViewModel {
 
+    /** Loading 至少展示这么久，避免本地数据库返回太快导致 Loading 一闪而过。 */
+    private static final long MIN_LOADING_MS = 500L;
+
     private final WordRepository repository;
     private final LiveData<List<Word>> allWords;
     private final MutableLiveData<List<Word>> dueWords =
             new MutableLiveData<>(Collections.emptyList());
     private final MutableLiveData<String> message = new MutableLiveData<>();
 
-    /** 单词表变化后自动刷新“待复习”数量，保证两个列表始终一致。 */
-    private final Observer<List<Word>> wordsObserver = words -> refreshDueWords();
+    /** 列表加载状态：首次从数据库读取完成前为 true。 */
+    private final MutableLiveData<Boolean> loading = new MutableLiveData<>(true);
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final long createdTime = System.currentTimeMillis();
+    private final Runnable hideLoading = () -> loading.setValue(false);
+
+    /** 单词表变化后：结束 Loading，并刷新“待复习”数量。 */
+    private final Observer<List<Word>> wordsObserver = words -> {
+        long remain = MIN_LOADING_MS - (System.currentTimeMillis() - createdTime);
+        if (remain > 0) {
+            mainHandler.postDelayed(hideLoading, remain);
+        } else {
+            loading.setValue(false);
+        }
+        refreshDueWords();
+    };
 
     public WordViewModel(@NonNull Application application) {
         super(application);
@@ -37,6 +57,7 @@ public class WordViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         allWords.removeObserver(wordsObserver);
+        mainHandler.removeCallbacks(hideLoading);
     }
 
     public LiveData<List<Word>> getAllWords() {
@@ -50,6 +71,11 @@ public class WordViewModel extends AndroidViewModel {
     /** 一次性提示消息（保存成功 / 删除成功 / 输入校验）。 */
     public LiveData<String> getMessage() {
         return message;
+    }
+
+    /** 列表 Loading 状态：Loading UI 直接观察它。 */
+    public LiveData<Boolean> isLoading() {
+        return loading;
     }
 
     // ==================== 增 ====================

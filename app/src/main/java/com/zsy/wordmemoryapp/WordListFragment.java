@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 /**
- * 单词列表页：只负责界面交互，数据由 {@link WordViewModel} -> {@link WordRepository} 读写。
- * 验证持久化：添加单词后杀掉 App 再打开，列表中的数据仍然存在（Room 落盘）。
+ * 单词列表页：RecyclerView 展示数据库中的单词，点击条目进入详情页。
+ *
+ * <p>数据链路：Room -> WordRepository -> WordViewModel(LiveData) -> Fragment。
+ * 观察 LiveData 即可在数据变化时自动刷新界面；首次读取完成前展示 Loading UI。</p>
  */
 public class WordListFragment extends Fragment implements WordAdapter.OnWordActionListener {
 
@@ -31,6 +33,12 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
     private EditText etMeaning;
     private TextView tvDueInfo;
     private TextView tvEmpty;
+    private RecyclerView rvWords;
+    private View loadingGroup;
+
+    /** 当前是否处于加载中，以及最近一次拿到的单词列表，用于统一决定三种状态的显示。 */
+    private boolean loading = true;
+    private List<Word> latestWords;
 
     public WordListFragment() {
         super(R.layout.fragment_word_list);
@@ -46,9 +54,10 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
         etMeaning = view.findViewById(R.id.etMeaning);
         tvDueInfo = view.findViewById(R.id.tvDueInfo);
         tvEmpty = view.findViewById(R.id.tvEmpty);
+        rvWords = view.findViewById(R.id.rvWords);
+        loadingGroup = view.findViewById(R.id.loadingGroup);
         Button btnAddWord = view.findViewById(R.id.btnAddWord);
 
-        RecyclerView rvWords = view.findViewById(R.id.rvWords);
         adapter = new WordAdapter(this);
         rvWords.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvWords.setAdapter(adapter);
@@ -60,11 +69,16 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
             viewModel.addWord(word, meaning, 3);
         });
 
+        // 加载状态：数据库首次读取完成前显示 Loading
+        viewModel.isLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            loading = isLoading != null && isLoading;
+            renderContent();
+        });
+
         // 观察数据库：新增/删除/修改后 Room 会自动推送最新数据
         viewModel.getAllWords().observe(getViewLifecycleOwner(), words -> {
-            adapter.submitList(words);
-            boolean empty = words == null || words.isEmpty();
-            tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+            latestWords = words;
+            renderContent();
         });
 
         viewModel.getDueWords().observe(getViewLifecycleOwner(), this::showDueWords);
@@ -81,6 +95,17 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
         });
 
         viewModel.refreshDueWords();
+    }
+
+    /** 统一控制三种状态：加载中 / 有数据 / 空列表。 */
+    private void renderContent() {
+        boolean isEmpty = latestWords == null || latestWords.isEmpty();
+        loadingGroup.setVisibility(loading ? View.VISIBLE : View.GONE);
+        rvWords.setVisibility(!loading && !isEmpty ? View.VISIBLE : View.GONE);
+        tvEmpty.setVisibility(!loading && isEmpty ? View.VISIBLE : View.GONE);
+        if (adapter != null) {
+            adapter.submitList(latestWords);
+        }
     }
 
     private void showDueWords(List<Word> dueWords) {

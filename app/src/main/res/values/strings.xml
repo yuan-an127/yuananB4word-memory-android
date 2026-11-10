@@ -31,4 +31,10 @@
     <string name="due_empty">待复习：0 个</string>
     <string name="due_count">待复习：%1$d 个</string>
     <string name="due_count_with_names">待复习：%1$d 个（%2$s）</string>
+    <string name="loading_words">正在加载单词…</string>
+    <string name="btn_delete_word">删除</string>
+    <string name="state_learning">学习中</string>
+    <string name="state_mastered">已掌握</string>
+    <string name="btn_mark_mastered">标记掌握</string>
+    <string name="btn_unmark_mastered">取消掌握</string>
 </resources>

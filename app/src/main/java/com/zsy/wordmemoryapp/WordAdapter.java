@@ -76,8 +76,8 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             tvMeaning.setText(word.getMeaning());
 
             boolean mastered = word.getMemoryState() == Word.STATE_MASTERED;
-            tvState.setText(mastered ? "已掌握" : "学习中");
-            btnMastered.setText(mastered ? "取消掌握" : "标记掌握");
+            tvState.setText(mastered ? R.string.state_mastered : R.string.state_learning);
+            btnMastered.setText(mastered ? R.string.btn_unmark_mastered : R.string.btn_mark_mastered);
 
             itemView.setOnClickListener(v -> listener.onWordClick(word));
             btnMastered.setOnClickListener(v -> listener.onToggleMastered(word));
