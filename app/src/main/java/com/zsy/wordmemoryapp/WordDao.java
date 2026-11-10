@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
@@ -101,4 +102,10 @@ public interface WordDao {
     @Query("SELECT COUNT(DISTINCT word_id) FROM review_record_table "
             + "WHERE review_result = 0 AND next_review_time <= :now")
     int countDueWords(long now);
+
+    // ==================== LiveData：数据变化后自动刷新界面 ====================
+
+    /** 观察全部单词，数据库有增删改时 Room 会自动重新查询并通知界面。 */
+    @Query("SELECT * FROM word_table ORDER BY id DESC")
+    LiveData<List<Word>> observeAllWords();
 }

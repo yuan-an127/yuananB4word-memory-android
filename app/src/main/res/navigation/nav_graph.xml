@@ -27,6 +27,10 @@
             android:name="word"
             android:defaultValue="abandon"
             app:argType="string" />
+        <argument
+            android:name="meaning"
+            android:defaultValue="（暂无释义）"
+            app:argType="string" />
     </fragment>
 
     <!-- 复习测试页 -->

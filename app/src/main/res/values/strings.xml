@@ -22,4 +22,13 @@
     <string name="btn_test_db">测试数据库</string>
     <string name="test_result_default">点击下方【测试连接】测试 DeepSeek API</string>
     <string name="db_result_default">点击下方【测试数据库】验证实体与 DAO</string>
+
+    <!-- 实验4：单词列表 / 数据持久化 -->
+    <string name="hint_word">单词，例如 abandon</string>
+    <string name="hint_meaning">释义，例如 v. 放弃；抛弃</string>
+    <string name="btn_add_word">添加单词</string>
+    <string name="word_list_empty">还没有单词，先在上面添加一个吧</string>
+    <string name="due_empty">待复习：0 个</string>
+    <string name="due_count">待复习：%1$d 个</string>
+    <string name="due_count_with_names">待复习：%1$d 个（%2$s）</string>
 </resources>
