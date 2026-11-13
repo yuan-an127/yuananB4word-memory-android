@@ -25,7 +25,7 @@
         tools:layout="@layout/fragment_word_detail">
         <argument
             android:name="wordId"
-            android:defaultValue="-1"
+            android:defaultValue="-1L"
             app:argType="long" />
     </fragment>
 
