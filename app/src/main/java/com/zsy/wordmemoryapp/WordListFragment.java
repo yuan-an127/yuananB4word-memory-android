@@ -3,8 +3,6 @@ package com.zsy.wordmemoryapp;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,10 +14,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.List;
 
 /**
- * 单词列表页：RecyclerView 展示数据库中的单词，点击条目进入详情页。
+ * 单词列表页：RecyclerView 展示数据库中的单词，点击条目进入详情页编辑。
+ * 新增单词也走详情页表单（wordId = -1）。
  *
  * <p>数据链路：Room -> WordRepository -> WordViewModel(LiveData) -> Fragment。
  * 观察 LiveData 即可在数据变化时自动刷新界面；首次读取完成前展示 Loading UI。</p>
@@ -29,8 +30,6 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
     private WordViewModel viewModel;
     private WordAdapter adapter;
 
-    private EditText etWord;
-    private EditText etMeaning;
     private TextView tvDueInfo;
     private TextView tvEmpty;
     private RecyclerView rvWords;
@@ -50,24 +49,17 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
 
         viewModel = new ViewModelProvider(this).get(WordViewModel.class);
 
-        etWord = view.findViewById(R.id.etWord);
-        etMeaning = view.findViewById(R.id.etMeaning);
         tvDueInfo = view.findViewById(R.id.tvDueInfo);
         tvEmpty = view.findViewById(R.id.tvEmpty);
         rvWords = view.findViewById(R.id.rvWords);
         loadingGroup = view.findViewById(R.id.loadingGroup);
-        Button btnAddWord = view.findViewById(R.id.btnAddWord);
+        MaterialButton btnNewWord = view.findViewById(R.id.btnNewWord);
 
         adapter = new WordAdapter(this);
         rvWords.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvWords.setAdapter(adapter);
 
-        btnAddWord.setOnClickListener(v -> {
-            String word = etWord.getText().toString();
-            String meaning = etMeaning.getText().toString();
-            // 视图层不碰数据库，只交给 ViewModel
-            viewModel.addWord(word, meaning, 3);
-        });
+        btnNewWord.setOnClickListener(v -> openDetail(WordDetailFragment.NEW_WORD_ID));
 
         // 加载状态：数据库首次读取完成前显示 Loading
         viewModel.isLoading().observe(getViewLifecycleOwner(), isLoading -> {
@@ -84,13 +76,8 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
         viewModel.getDueWords().observe(getViewLifecycleOwner(), this::showDueWords);
 
         viewModel.getMessage().observe(getViewLifecycleOwner(), message -> {
-            if (TextUtils.isEmpty(message)) {
-                return;
-            }
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-            if (message.startsWith("已保存")) {
-                etWord.setText("");
-                etMeaning.setText("");
+            if (!TextUtils.isEmpty(message)) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -127,15 +114,18 @@ public class WordListFragment extends Fragment implements WordAdapter.OnWordActi
         tvDueInfo.setText(getString(R.string.due_count_with_names, count, names.toString()));
     }
 
+    private void openDetail(long wordId) {
+        Bundle args = new Bundle();
+        args.putLong(WordDetailFragment.ARG_WORD_ID, wordId);
+        NavHostFragment.findNavController(WordListFragment.this)
+                .navigate(R.id.action_wordList_to_wordDetail, args);
+    }
+
     // ==================== 列表条目事件 ====================
 
     @Override
     public void onWordClick(Word word) {
-        Bundle args = new Bundle();
-        args.putString(WordDetailFragment.ARG_WORD, word.getWord());
-        args.putString(WordDetailFragment.ARG_MEANING, word.getMeaning());
-        NavHostFragment.findNavController(WordListFragment.this)
-                .navigate(R.id.action_wordList_to_wordDetail, args);
+        openDetail(word.getId());
     }
 
     @Override

@@ -11,26 +11,22 @@
         android:name="com.zsy.wordmemoryapp.WordListFragment"
         android:label="@string/title_word_list"
         tools:layout="@layout/fragment_word_list">
-        <!-- 列表 -> 详情 -->
+        <!-- 列表 -> 详情（wordId = -1 表示新增） -->
         <action
             android:id="@+id/action_wordList_to_wordDetail"
             app:destination="@id/wordDetailFragment" />
     </fragment>
 
-    <!-- 单词详情页：接收列表页传过来的 word 参数 -->
+    <!-- 单词详情页：wordId > 0 为编辑已有单词，-1 为新增单词 -->
     <fragment
         android:id="@+id/wordDetailFragment"
         android:name="com.zsy.wordmemoryapp.WordDetailFragment"
         android:label="@string/title_word_detail"
         tools:layout="@layout/fragment_word_detail">
         <argument
-            android:name="word"
-            android:defaultValue="abandon"
-            app:argType="string" />
-        <argument
-            android:name="meaning"
-            android:defaultValue="（暂无释义）"
-            app:argType="string" />
+            android:name="wordId"
+            android:defaultValue="-1"
+            app:argType="long" />
     </fragment>
 
     <!-- 复习测试页 -->

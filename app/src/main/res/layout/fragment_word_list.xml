@@ -14,30 +14,12 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/etWord"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnNewWord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="@string/hint_word"
-        android:inputType="text"
-        android:maxLines="1" />
-
-    <EditText
-        android:id="@+id/etMeaning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="@string/hint_meaning"
-        android:inputType="text"
-        android:maxLines="1" />
-
-    <Button
-        android:id="@+id/btnAddWord"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/btn_add_word" />
+        android:text="@string/btn_new_word" />
 
     <TextView
         android:id="@+id/tvDueInfo"

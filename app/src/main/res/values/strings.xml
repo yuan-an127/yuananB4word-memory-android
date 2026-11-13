@@ -37,4 +37,17 @@
     <string name="state_mastered">已掌握</string>
     <string name="btn_mark_mastered">标记掌握</string>
     <string name="btn_unmark_mastered">取消掌握</string>
+
+    <!-- 实验6：单词详情 / 新增 / 编辑 / 删除 -->
+    <string name="btn_new_word">＋ 新增单词</string>
+    <string name="title_new_word">新增单词</string>
+    <string name="title_edit_word">编辑单词</string>
+    <string name="word_detail_form_hint">填写单词和释义，保存后写入本地 Room 数据库</string>
+    <string name="btn_save">保存</string>
+    <string name="error_word_required">请输入单词</string>
+    <string name="error_meaning_required">请输入释义</string>
+    <string name="dialog_delete_title">删除单词</string>
+    <string name="dialog_delete_message">确定要删除「%1$s」吗？</string>
+    <string name="dialog_delete_confirm">删除</string>
+    <string name="dialog_delete_cancel">取消</string>
 </resources>
