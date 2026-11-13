@@ -103,6 +103,14 @@ public interface WordDao {
             + "WHERE review_result = 0 AND next_review_time <= :now")
     int countDueWords(long now);
 
+    /** 所有待复习记录，交给 {@link ReviewScheduler#buildDailyQueue} 生成复习队列。 */
+    @Query("SELECT * FROM review_record_table WHERE review_result = 0 ORDER BY next_review_time ASC")
+    List<ReviewRecord> getPendingReviewRecords();
+
+    /** 按 id 批量查询单词（复习队列拼装用）。 */
+    @Query("SELECT * FROM word_table WHERE id IN (:ids)")
+    List<Word> getWordsByIds(List<Long> ids);
+
     // ==================== LiveData：数据变化后自动刷新界面 ====================
 
     /** 观察全部单词，数据库有增删改时 Room 会自动重新查询并通知界面。 */

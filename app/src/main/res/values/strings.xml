@@ -50,4 +50,10 @@
     <string name="dialog_delete_message">确定要删除「%1$s」吗？</string>
     <string name="dialog_delete_confirm">删除</string>
     <string name="dialog_delete_cancel">取消</string>
+
+    <!-- 实验5前期：艾宾浩斯复习队列 -->
+    <string name="review_hint">根据艾宾浩斯遗忘曲线生成今日复习队列：记住则延长间隔，忘记则 5 分钟后重新复习</string>
+    <string name="review_empty">今天没有需要复习的单词，去添加一些新单词吧</string>
+    <string name="btn_remember">记住了</string>
+    <string name="btn_forget">忘记了</string>
 </resources>

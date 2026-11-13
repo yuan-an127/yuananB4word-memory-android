@@ -29,16 +29,7 @@ public class ReviewRecord {
     public static final int RESULT_KNOWN = 3;
 
     /** 艾宾浩斯复习间隔：5 分钟、30 分钟、12 小时、1 天、2 天、4 天、7 天、15 天（毫秒）。 */
-    private static final long[] EBBINGHAUS_INTERVALS = {
-            5 * 60 * 1000L,
-            30 * 60 * 1000L,
-            12 * 60 * 60 * 1000L,
-            24 * 60 * 60 * 1000L,
-            2 * 24 * 60 * 60 * 1000L,
-            4 * 24 * 60 * 60 * 1000L,
-            7 * 24 * 60 * 60 * 1000L,
-            15 * 24 * 60 * 60 * 1000L
-    };
+    // 间隔表统一定义在 ReviewScheduler 中，这里委托过去，避免两处维护。
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -81,10 +72,9 @@ public class ReviewRecord {
         return new ReviewRecord(wordId, reviewStage, nextReviewTime, RESULT_PENDING, 0L);
     }
 
-    /** 根据阶段获取艾宾浩斯复习间隔（毫秒），超出阶段后按最后一个间隔循环。 */
+    /** 根据阶段获取艾宾浩斯复习间隔（毫秒），间隔表由 {@link ReviewScheduler} 统一维护。 */
     public static long intervalOf(int stage) {
-        int index = Math.max(0, Math.min(stage, EBBINGHAUS_INTERVALS.length - 1));
-        return EBBINGHAUS_INTERVALS[index];
+        return ReviewScheduler.intervalOf(stage);
     }
 
     /** 当前阶段复习完成后，下一次复习应该安排的时间。 */

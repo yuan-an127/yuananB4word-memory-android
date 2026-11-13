@@ -171,6 +171,29 @@ public class WordRepository {
         });
     }
 
+    public void updateReviewRecord(@NonNull ReviewRecord record, Callback<Integer> callback) {
+        ioExecutor.execute(() -> {
+            wordDao.updateReviewRecord(record);
+            postToMain(() -> callback.onResult(1));
+        });
+    }
+
+    /** 今天需要复习的单词（含逾期），用于生成当日复习队列。 */
+    public void getWordsByIds(List<Long> ids, Callback<List<Word>> callback) {
+        ioExecutor.execute(() -> {
+            final List<Word> words = wordDao.getWordsByIds(ids);
+            postToMain(() -> callback.onResult(words));
+        });
+    }
+
+    /** 所有待复习记录，用于艾宾浩斯算法生成队列。 */
+    public void getPendingReviewRecords(Callback<List<ReviewRecord>> callback) {
+        ioExecutor.execute(() -> {
+            final List<ReviewRecord> records = wordDao.getPendingReviewRecords();
+            postToMain(() -> callback.onResult(records));
+        });
+    }
+
     private void postToMain(Runnable action) {
         mainHandler.post(action);
     }
